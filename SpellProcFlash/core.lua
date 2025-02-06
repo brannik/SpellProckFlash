@@ -1,5 +1,5 @@
 local _, playerClass = UnitClass("player")
-
+-- update
 local addonName = "SPF_" .. playerClass:sub(1,1):upper() .. playerClass:sub(2):lower()
 LoadAddOn(addonName)
 
