@@ -18,7 +18,8 @@
         "class",
         "DEFAULT_CHAT_FRAME",
         "SPELLS",
-        "UIErrorsFrame"
+        "UIErrorsFrame",
+        "SlashCmdList"
     ],
     "Lua.diagnostics.disable": [
         "deprecated"
