@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: SPF_Warrior
+## Notes: Flash spell procs for Warrior class
+## Author: Agset
+## Version: 1.0
+## Dependencies: SpellProcFlash
+
+SPF_Warrior_Main.lua
+Spells.lua

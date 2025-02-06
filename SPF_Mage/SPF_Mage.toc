@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: SPF_Mage
+## Notes: Flash spell procs for Mage class
+## Author: Agset
+## Version: 1.0
+## Dependencies: SpellProcFlash
+
+SPF_Mage_Main.lua
+Spells.lua

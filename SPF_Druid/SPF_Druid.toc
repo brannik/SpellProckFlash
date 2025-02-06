@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: SPF_Druid
+## Notes: Flash spell procs for Druid class
+## Author: Agset
+## Version: 1.0
+## Dependencies: SpellProcFlash
+
+SPF_Druid_Main.lua
+Spells.lua

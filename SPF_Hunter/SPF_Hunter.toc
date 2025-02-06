@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: SPF_Hunter
+## Notes: Flash spell procs for Hunter class
+## Author: Agset
+## Version: 1.0
+## Dependencies: SpellProcFlash
+
+SPF_Hunter_Main.lua
+Spells.lua

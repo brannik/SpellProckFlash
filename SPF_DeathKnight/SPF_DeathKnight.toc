@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: SPF_DeathKnight
+## Notes: Flash spell procs for Death Knight class
+## Author: Agset
+## Version: 1.0
+## Dependencies: SpellProcFlash
+
+SPF_DeathKnight_Main.lua
+Spells.lua

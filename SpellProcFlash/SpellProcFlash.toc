@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: SpellProcFlash
+## Notes: Notify you when a spell procs
+## Author: Agset
+## Version: 1.0
+
+core.lua

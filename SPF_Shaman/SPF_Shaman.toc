@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: SPF_Shaman
+## Notes: Flash spell procs for Shaman class
+## Author: Agset
+## Version: 1.0
+## Dependencies: SpellProcFlash
+
+SPF_Shaman_Main.lua
+Spells.lua

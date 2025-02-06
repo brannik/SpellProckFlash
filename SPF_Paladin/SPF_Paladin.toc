@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: SPF_Paladin
+## Notes: Flash spell procs for Paladin class
+## Author: Agset
+## Version: 1.0
+## Dependencies: SpellProcFlash
+
+SPF_Paladin_Main.lua
+Spells.lua

@@ -1,0 +1,9 @@
+## Interface: 30300
+## Title: SPF_Rogue
+## Notes: Flash spell procs for Rogue class
+## Author: Agset
+## Version: 1.0
+## Dependencies: SpellProcFlash
+
+SPF_Rogue_Main.lua
+Spells.lua
