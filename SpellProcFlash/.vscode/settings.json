@@ -19,7 +19,8 @@
         "DEFAULT_CHAT_FRAME",
         "SPELLS",
         "UIErrorsFrame",
-        "SlashCmdList"
+        "SlashCmdList",
+        "CooldownFrame_Clear"
     ],
     "Lua.diagnostics.disable": [
         "deprecated"
