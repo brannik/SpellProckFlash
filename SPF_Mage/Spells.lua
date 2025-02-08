@@ -1,7 +1,13 @@
 -- List of proc spell IDs to track
 local procSpells = {
-    [46916] = { -- slam
-        texture = "Interface\\AddOns\\SPF_Mage\\Resources\\raging_blow.blp",
+    [44401] = { -- Missile Barrage
+        texture = "Interface\\AddOns\\SPF_Mage\\Resources\\arcane_missiles.blp",
+        position = "LEFT",
+        missing = true,
+        rotation = 0
+    },
+    [48108] = { -- Hot Streak
+        texture = "Interface\\AddOns\\SPF_Mage\\Resources\\hot_streak.blp",
         position = "LEFT",
         missing = true,
         rotation = 0

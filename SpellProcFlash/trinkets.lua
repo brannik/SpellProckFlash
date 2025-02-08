@@ -105,6 +105,31 @@ local trinkets = {
         procs = {71485,71484,71492},  -- Spell IDs that trigger on proc
         buffCD = 30,      -- Duration of buff
         internalCD = 75   -- Internal cooldown
+    }, 
+    [47213] = { -- Abyssal Rune
+        procs = {60064},  -- Spell IDs that trigger on proc
+        buffCD = 10,      -- Duration of buff
+        internalCD = 35   -- Internal cooldown
+    },
+    [40682] = { -- Sundial of the Exiled
+        procs = {67669},  -- Spell IDs that trigger on proc
+        buffCD = 10,      -- Duration of buff
+        internalCD = 35   -- Internal cooldown
+    },
+    [45535] = { -- Show of Faith
+        procs = {64739},  -- Spell IDs that trigger on proc
+        buffCD = 15,      -- Duration of buff
+        internalCD = 35   -- Internal cooldown
+    },
+    [45518] = { -- Flare of the Heavens
+        procs = {64713},  -- Spell IDs that trigger on proc
+        buffCD = 10,      -- Duration of buff
+        internalCD = 35   -- Internal cooldown
+    },
+    [50353] = { -- DFO NM
+        procs = {71601},  -- Spell IDs that trigger on proc
+        buffCD = 20,      -- Duration of buff
+        internalCD = 25   -- Internal cooldown
     },
 }
 
