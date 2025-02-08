@@ -1,7 +1,13 @@
 -- List of proc spell IDs to track
 local procSpells = {
-    [46916] = { -- slam
-        texture = "Interface\\AddOns\\SPF_DeathKnight\\Resources\\raging_blow.blp",
+    [59052] = { -- Freezing Fog
+        texture = "Interface\\AddOns\\SPF_DeathKnight\\Resources\\rime.blp",
+        position = "TOP",
+        missing = true,
+        rotation = 0
+    },
+    [51124] = { -- Killing machine
+        texture = "Interface\\AddOns\\SPF_DeathKnight\\Resources\\killing_machine.blp",
         position = "LEFT",
         missing = true,
         rotation = 0

@@ -67,12 +67,45 @@ local trinkets = {
         procs = {75456},  -- Spell IDs that trigger on proc
         buffCD = 15,      -- Duration of buff
         internalCD = 30   -- Internal cooldown
-    }, 
+    },
+    [54589] = { -- STS NM
+        procs = {75455},  -- Spell IDs that trigger on proc
+        buffCD = 15,      -- Duration of buff
+        internalCD = 45   -- Internal cooldown
+    },
+    [50364] = { -- DBW NM
+        procs = {71557,71558,71559,71560,71561,71599},  -- Spell IDs that trigger on proc
+        buffCD = 30,      -- Duration of buff
+        internalCD = 45   -- Internal cooldown
+    },
     [50363] = { -- DBW HC
         procs = {71556,71558,71559,71560,71561,71599},  -- Spell IDs that trigger on proc
         buffCD = 30,      -- Duration of buff
         internalCD = 75   -- Internal cooldown
-    },  
+    },
+    [45609] = { -- Comet's Trail
+        procs = {64772},  -- Spell IDs that trigger on proc
+        buffCD = 10,      -- Duration of buff
+        internalCD = 35   -- Internal cooldown
+    },
+    [46038] = { -- Dark Matter
+        procs = {65024},  -- Spell IDs that trigger on proc
+        buffCD = 10,      -- Duration of buff
+        internalCD = 35   -- Internal cooldown
+    },
+    [54569] = { -- STS Norm
+        procs = {75458},  -- Spell IDs that trigger on proc
+        buffCD = 15,      -- Duration of buff
+        internalCD = 30   -- Internal cooldown
+    },
+    [50362] = { -- DBW Norm
+        procs = {71485,71484,71492},  -- Spell IDs that trigger on proc
+        buffCD = 30,      -- Duration of buff
+        internalCD = 75   -- Internal cooldown
+    },
+    -- icc trinkets
+    -- rs trinkets
+
 }
 
 local procs = {}
@@ -184,14 +217,26 @@ local function OnUpdate(self, elapsed)
         end
     end
 end
-
-TrinketFrame:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+TrinketFrame:RegisterEvent("ADDON_LOADED")
+TrinketFrame:RegisterEvent("PLAYER_LOGIN")
+TrinketFrame:RegisterEvent("UNIT_INVENTORY_CHANGED")
+TrinketFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 TrinketFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 TrinketFrame:SetScript("OnEvent", function(self, event, ...)
     local _, subEvent, _, senderName, _, _, _, _, spellID = ...
     if senderName == UnitName("player") then
-        if event == "PLAYER_EQUIPMENT_CHANGED" then
+        if event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD" then
             UpdateTrinkets()
+        elseif event == "UNIT_INVENTORY_CHANGED" then 
+            local unit = ...
+            if unit == "player" then
+                UpdateTrinkets()
+            end
+        elseif event == "ADDON_LOADED" then
+            local addon = ...
+            if addon == "SpellProcFlash" then
+                UpdateTrinkets()
+            end
         elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
             CombatLogHandler(self, subEvent, senderName, spellID)
         end

@@ -7,3 +7,5 @@
 
 SPF_Rogue_Main.lua
 Spells.lua
+cpoints.lua
+temp_enchants.lua
