@@ -144,6 +144,7 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
 frame:SetScript("OnEvent", function(self, event, ...)
+    if not UnitAffectingCombat("player") then return end
     -- Get combat log event details
     local arg1, subEvent, arg3, 
           senderName, arg5, arg6, arg7, 

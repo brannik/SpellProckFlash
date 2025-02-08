@@ -95,6 +95,7 @@ end
 
 -- Event handling
 frame:SetScript("OnEvent", function(self, event, arg1)
+    if not UnitAffectingCombat("player") then return end
     if event == "UNIT_COMBO_POINTS" and arg1 == "player" then
         UpdateComboPoints()
     elseif event == "PLAYER_TARGET_CHANGED" then

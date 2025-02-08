@@ -296,7 +296,7 @@ TrinketFrame:SetScript("OnEvent", function(self, event, ...)
             if addon == "SpellProcFlash" then
                 UpdateTrinkets()
             end
-        elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
+        elseif event == "COMBAT_LOG_EVENT_UNFILTERED" and UnitAffectingCombat("player") then
             CombatLogHandler(self, subEvent, senderName, spellID)
         end
     end
