@@ -5,6 +5,24 @@ local procSpells = {
         position = "LEFT",
         missing = true,
         rotation = 0
+    },
+    [60503] = { -- Taste of Blood / Overpower
+        texture = "Interface\\AddOns\\SPF_Warrior\\Resources\\white_tiger.blp",
+        position = "RIGHT",
+        missing = true,
+        rotation = 180
+    },
+    [52437] = { -- Sudden Death / Execute
+        texture = "Interface\\AddOns\\SPF_Warrior\\Resources\\blood_surge.blp",
+        position = "TOP",
+        missing = true,
+        rotation = 0
+    },
+    [65156] = { -- Juggernaut / Charge
+        texture = "Interface\\AddOns\\SPF_Warrior\\Resources\\bandits_guile.blp",
+        position = "LEFT",
+        missing = true,
+        rotation = 0
     }
 }
 

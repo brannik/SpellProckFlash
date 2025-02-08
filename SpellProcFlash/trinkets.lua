@@ -31,8 +31,6 @@ local function CreateGlowEffect(frame)
     return frame
 end
 
-
-
 local TrinketFrame = CreateFrame("Frame", "TrinketWatcher", UIParent)
 TrinketFrame:SetSize(40, 40)
 TrinketFrame:SetPoint("CENTER", UIParent, "CENTER", -23, -150)
@@ -53,13 +51,18 @@ TrinketIcon2:SetAllPoints()
 local TrinketCooldown2 = CreateFrame("Cooldown", nil, TrinketFrame2, "CooldownFrameTemplate")
 
 -- Create font strings for buff/internal CD timers
+-- For TrinketTimerText
 local TrinketTimerText = TrinketFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-TrinketTimerText:SetPoint("CENTER", TrinketFrame, "CENTER", 0, -30)
+TrinketTimerText:SetPoint("CENTER", TrinketFrame, "CENTER", 0, 0)
 TrinketTimerText:SetText("")
+TrinketTimerText:SetFont("Fonts\\FRIZQT__.TTF", 20, "OUTLINE")  -- Increase font size to 20 and add outline
 
+-- For TrinketTimerText2
 local TrinketTimerText2 = TrinketFrame2:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-TrinketTimerText2:SetPoint("CENTER", TrinketFrame2, "CENTER", 0, -30)
+TrinketTimerText2:SetPoint("CENTER", TrinketFrame2, "CENTER", 0, 0)
 TrinketTimerText2:SetText("")
+TrinketTimerText2:SetFont("Fonts\\FRIZQT__.TTF", 20, "OUTLINE")  -- Increase font size to 20 and add outline
+
 
 -- Trinkets table
 local trinkets = {
@@ -103,9 +106,6 @@ local trinkets = {
         buffCD = 30,      -- Duration of buff
         internalCD = 75   -- Internal cooldown
     },
-    -- icc trinkets
-    -- rs trinkets
-
 }
 
 local procs = {}
@@ -116,7 +116,7 @@ local function UpdateTrinkets()
     local trinket1 = GetInventoryItemID("player", 13)
     local trinket2 = GetInventoryItemID("player", 14)
     procs = {}
-    
+
     if trinket1 then
         TrinketIcon:SetTexture(GetItemIcon(trinket1))
         TrinketFrame:Show()
@@ -128,7 +128,7 @@ local function UpdateTrinkets()
     else
         TrinketFrame:Hide()
     end
-    
+
     if trinket2 then
         TrinketIcon2:SetTexture(GetItemIcon(trinket2))
         TrinketFrame2:Show()
@@ -148,15 +148,13 @@ local function CombatLogHandler(_, event, destGUID, spellID)
             local trinketSlot = procs[spellID].slot
             local buffCD = procs[spellID].buffCD
             local expirationTime = GetTime() + buffCD
-            activeProcs[trinketSlot] = expirationTime 
+            activeProcs[trinketSlot] = expirationTime
 
-            -- Show glow while buff is active
+            -- Show glow and start the countdown for the timer
             if trinketSlot == 13 then
                 TrinketGlow:Show()
-                TrinketTimerText:SetText(string.format("|cFF00FF00%d|r", buffCD)) -- Green color
             elseif trinketSlot == 14 then
                 TrinketGlow2:Show()
-                TrinketTimerText2:SetText(string.format("|cFF00FF00%d|r", buffCD)) -- Green color
             end
         end
     elseif event == "SPELL_AURA_REMOVED" and destGUID == UnitName("player") then
@@ -175,40 +173,54 @@ local function CombatLogHandler(_, event, destGUID, spellID)
             local internalCD = procs[spellID].internalCD
             local icdExpiration = GetTime() + internalCD
             activeICDs[trinketSlot] = icdExpiration
-
-            if trinketSlot == 13 then
-                TrinketTimerText:SetText(string.format("|cFFFF0000%d|r", internalCD))
-            elseif trinketSlot == 14 then
-                TrinketTimerText2:SetText(string.format("|cFFFF0000%d|r", internalCD))
-            end
         end
     end
 end
-
+-- Function to handle the internal cooldown animation
 local function OnUpdate(self, elapsed)
+    -- Buff timers (remain as text)
     for slot, expireTime in pairs(activeProcs) do
         local remaining = expireTime - GetTime()
         if remaining > 0 then
             if slot == 13 then
-                TrinketTimerText:SetText(string.format("|cFF00FF00%d|r", remaining))
+                TrinketTimerText:SetText(string.format("|cFF00FF00%d|r", remaining)) -- Green for buff timer
             elseif slot == 14 then
-                TrinketTimerText2:SetText(string.format("|cFF00FF00%d|r", remaining))
+                TrinketTimerText2:SetText(string.format("|cFF00FF00%d|r", remaining)) -- Green for buff timer
             end
         else
             activeProcs[slot] = nil
+            -- Hide glow after buff expires
+            if slot == 13 then
+                TrinketGlow:Hide()
+                TrinketTimerText:SetText("") -- Clear the timer text
+            elseif slot == 14 then
+                TrinketGlow2:Hide()
+                TrinketTimerText2:SetText("") -- Clear the timer text
+            end
         end
     end
 
+    -- Internal cooldown timers (graphical display inside the icon)
     for slot, expireTime in pairs(activeICDs) do
-        local remaining = expireTime - GetTime()
+        local remaining = expireTime - GetTime()  -- Time left on the cooldown
         if remaining > 0 then
-            if slot == 13 then
-                TrinketTimerText:SetText(string.format("|cFFFF0000%d|r", remaining))
-            elseif slot == 14 then
-                TrinketTimerText2:SetText(string.format("|cFFFF0000%d|r", remaining))
+            -- Use the correct internal cooldown based on the slot (13 or 14)
+            local trinketID = GetInventoryItemID("player", slot)
+            if trinketID and trinkets[trinketID] then
+                local internalCD = trinkets[trinketID].internalCD  -- Get the internal cooldown for the trinket
+                if slot == 13 then
+                    -- Set the cooldown for Trinket 1
+                    TrinketTimerText:SetText(string.format("|cFFFF0000%d|r", remaining))
+                elseif slot == 14 then
+                    -- Set the cooldown for Trinket 2
+                    TrinketTimerText2:SetText(string.format("|cFFFF0000%d|r", remaining))
+                end
             end
         else
+            -- Internal cooldown has finished, remove from active list
             activeICDs[slot] = nil
+            
+            -- Reset the graphical cooldown after internal cooldown ends
             if slot == 13 then
                 TrinketTimerText:SetText("")
             elseif slot == 14 then
@@ -217,17 +229,39 @@ local function OnUpdate(self, elapsed)
         end
     end
 end
+
+-- Hook up OnUpdate function to handle cooldown updates
+local frame = CreateFrame("Frame")
+frame:SetScript("OnUpdate", OnUpdate)
+
+
+
+local function DelayedUpdateTrinkets()
+    -- Use a timer to delay the first update
+    TrinketFrame:SetScript("OnUpdate", function(self)
+        -- Call the function to update trinkets
+        UpdateTrinkets()
+        -- Remove the OnUpdate script after it runs once
+        self:SetScript("OnUpdate", nil)
+    end)
+end
+
 TrinketFrame:RegisterEvent("ADDON_LOADED")
 TrinketFrame:RegisterEvent("PLAYER_LOGIN")
 TrinketFrame:RegisterEvent("UNIT_INVENTORY_CHANGED")
 TrinketFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 TrinketFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 TrinketFrame:SetScript("OnEvent", function(self, event, ...)
-    local _, subEvent, _, senderName, _, _, _, _, spellID = ...
+    local arg1, subEvent, arg3, 
+          senderName, arg5, arg6, arg7, 
+          arg8, spellID, arg10, arg11, 
+          arg12, arg13, arg14, 
+          arg15, arg16, arg17, arg18, arg19, arg20, arg21, arg22, arg23 = ...
     if senderName == UnitName("player") then
         if event == "PLAYER_LOGIN" or event == "PLAYER_ENTERING_WORLD" then
-            UpdateTrinkets()
-        elseif event == "UNIT_INVENTORY_CHANGED" then 
+            -- Use a delayed update to ensure inventory and UI are fully loaded
+            DelayedUpdateTrinkets()
+        elseif event == "UNIT_INVENTORY_CHANGED" then
             local unit = ...
             if unit == "player" then
                 UpdateTrinkets()
@@ -244,4 +278,6 @@ TrinketFrame:SetScript("OnEvent", function(self, event, ...)
 end)
 
 TrinketFrame:SetScript("OnUpdate", OnUpdate)
-UpdateTrinkets()
+
+-- Initial update with a slight delay
+DelayedUpdateTrinkets()

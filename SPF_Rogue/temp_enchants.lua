@@ -5,7 +5,7 @@ frame:Hide()  -- Hide by default
 
 -- Create text to display missing enchants and time left
 frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-frame.text:SetPoint("TOP", frame, "TOP", 0, -70)
+frame.text:SetPoint("TOP", frame, "TOP", 0, -120)
 
 -- Create texture to display main hand weapon icon
 frame.mainHandIcon = frame:CreateTexture(nil, "OVERLAY")
