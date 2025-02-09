@@ -131,6 +131,11 @@ local trinkets = {
         buffCD = 20,      -- Duration of buff
         internalCD = 25   -- Internal cooldown
     },
+    [54588] = { -- CTS HC
+        procs = {75473},  -- Spell IDs that trigger on proc
+        buffCD = 15,      -- Duration of buff
+        internalCD = 35   -- Internal cooldown
+    },
 }
 
 local procs = {}

@@ -9,9 +9,14 @@ local activeDoTs = {}
 
 -- Function to calculate and update the DoT durations based on the player's haste
 local DoTs = {
-    [48160] = {duration = 15, hasteAffected = true},  -- Vampiric Touch (15 seconds)
-    [48300] = {duration = 24, hasteAffected = true},  -- Devouring Plague (24 seconds)
-    [48125] = {duration = 18, hasteAffected = false}, -- Shadow Word: Pain (18 seconds, not affected by haste)
+    [47813] = {duration = 18, hasteAffected = true},  -- Corruption
+    [47811] = {duration = 24, hasteAffected = false},  -- Immolate
+    [11719] = {duration = 30, hasteAffected = false},  -- Tongues
+    [47865] = {duration = 300, hasteAffected = false},  -- Elements
+    [59164] = {duration = 12, hasteAffected = false},  -- Haunt
+    [47843] = {duration = 15, hasteAffected = false},  -- Unstabe affliction
+    [47864] = {duration = 24, hasteAffected = false},  -- Agony
+    [47867] = {duration = 60, hasteAffected = false},  -- Doom
 }
 
 local function UpdateDoTDurations()
@@ -141,12 +146,12 @@ DoTTracker:SetScript("OnEvent", function(self, event, ...)
           arg8, spellID, arg10, arg11, 
           arg12, arg13, arg14, 
           arg15, arg16, arg17, arg18, arg19, arg20, arg21, arg22, arg23 = ...
-    -- Only track debuffs from the player
     if event == "UNIT_INVENTORY_CHANGED" then
         if unit == "player" then
             UpdateDoTDurations()
         end
     end
+    -- Only track debuffs from the player
     if senderName == playerName and DoTs[spellID] then
         if subEvent == "SPELL_AURA_APPLIED" then
             -- Apply the DoT

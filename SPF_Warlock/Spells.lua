@@ -1,8 +1,14 @@
 -- List of proc spell IDs to track
 local procSpells = {
-    [46916] = { -- slam
-        texture = "Interface\\AddOns\\SPF_Warlock\\Resources\\raging_blow.blp",
+    [71165] = { -- Molten Core
+        texture = "Interface\\AddOns\\SPF_Warlock\\Resources\\imp_empowerment.blp",
         position = "LEFT",
+        missing = true,
+        rotation = 0
+    },
+    [63167] = { -- Decimation
+        texture = "Interface\\AddOns\\SPF_Warlock\\Resources\\berserk.blp",
+        position = "TOP",
         missing = true,
         rotation = 0
     }
@@ -144,7 +150,7 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
 frame:SetScript("OnEvent", function(self, event, ...)
-    if not UnitAffectingCombat("player") then return end
+    --if not UnitAffectingCombat("player") then return end
     -- Get combat log event details
     local arg1, subEvent, arg3, 
           senderName, arg5, arg6, arg7, 

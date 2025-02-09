@@ -2,6 +2,7 @@ local DoTTracker = CreateFrame("Frame")
 DoTTracker:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 DoTTracker:RegisterEvent("ADDON_LOADED")
 DoTTracker:RegisterEvent("PLAYER_LOGIN")
+DoTTracker:RegisterEvent("UNIT_INVENTORY_CHANGED")
 
 local playerName = UnitName("player")
 local activeDoTs = {}
@@ -13,29 +14,19 @@ local DoTs = {
 }
 
 local function UpdateDoTDurations()
-    -- Get the player's spell haste (this example uses a fixed value of 29.52% for testing)
-    local spellHaste = GetCombatRating(CR_HASTE_SPELL)  -- Get haste rating
+    local spellHaste = GetCombatRatingBonus(CR_HASTE_SPELL) / 100  -- Convert haste rating to percentage
 
-    local ratingPerHaste = 32.79  -- Standard for level 70+ (adjust for lower levels if necessary)
+    print("Player Spell Haste: " .. string.format("%.2f", spellHaste * 100) .. "%")
 
-    -- Calculate the haste percentage without multiplying by 100
-    local hastePercentage = (spellHaste / ratingPerHaste) / 100
-
-    -- Print haste info for debugging (optional)
-    print("Player Spell Haste: " .. string.format("%.2f", hastePercentage * 100) .. "%")  -- Multiplying by 100 for display
-
-    -- Loop through the DoTs and adjust their durations based on spell haste if the flag is true
     for spellID, data in pairs(DoTs) do
-        local baseDuration = data.duration
+        local baseDuration = data.duration  -- Store the original base duration separately
         local hasteAffected = data.hasteAffected
 
-        -- Apply haste only if the flag is true
         if hasteAffected then
-            local newDuration = baseDuration / (1 + hastePercentage)  -- Adjust the duration based on haste percentage
-            DoTs[spellID].duration = newDuration  -- Update the table with the new duration
+            local newDuration = baseDuration / (1 + spellHaste)  -- Correct haste application
+            DoTs[spellID].duration = newDuration  -- Update with correct duration
             print("Updated duration for spell ID " .. spellID .. ": " .. string.format("%.2f", newDuration))
         else
-            -- If haste is not applied, print the base duration
             print("Spell ID " .. spellID .. " is not affected by haste. Duration: " .. baseDuration)
         end
     end
@@ -143,13 +134,19 @@ local function UpdateDoTIcons()
 end
 
 DoTTracker:SetScript("OnEvent", function(self, event, ...)
-    if not UnitAffectingCombat("player") then return end
+    --if not UnitAffectingCombat("player") then return end
     local arg1, subEvent, arg3, 
           senderName, arg5, arg6, arg7, 
           arg8, spellID, arg10, arg11, 
           arg12, arg13, arg14, 
           arg15, arg16, arg17, arg18, arg19, arg20, arg21, arg22, arg23 = ...
+
     -- Only track debuffs from the player
+    if event == "UNIT_INVENTORY_CHANGED" then
+        if unit == "player" then
+            UpdateDoTDurations()
+        end
+    end
     if senderName == playerName and DoTs[spellID] then
         if subEvent == "SPELL_AURA_APPLIED" then
             -- Apply the DoT
