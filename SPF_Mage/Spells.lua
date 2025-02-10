@@ -1,22 +1,126 @@
+
 -- List of proc spell IDs to track
 local procSpells = {
     [44401] = { -- Missile Barrage
         texture = "Interface\\AddOns\\SPF_Mage\\Resources\\arcane_missiles.blp",
         position = "LEFT",
         missing = true,
-        rotation = 0
+        rotation = 0,
+        relativeSpell = {9999999}
     },
     [48108] = { -- Hot Streak
         texture = "Interface\\AddOns\\SPF_Mage\\Resources\\hot_streak.blp",
         position = "LEFT",
         missing = true,
-        rotation = 0
+        rotation = 0,
+        relativeSpell = {181}
     }
 }
 
 local active_icons = {
     -- [spellid] = frame
 }
+
+local glowFrames = {} -- Store glow textures per button
+local pulseFrames = {} -- Store pulse animation groups for each button
+
+-- Check if Bartender 4 is loaded
+local function IsBartender4Loaded()
+    return IsAddOnLoaded("Bartender4") or false
+end
+
+-- Get the correct action button based on slot, considering Bartender
+local function GetActionButton(slot)
+    -- If Bartender 4 is loaded, we use Bartender buttons
+    if IsBartender4Loaded() then
+        local button = _G["BT4Button" .. slot]
+        if button then
+            return button
+        end
+    end
+
+    -- Default action bars if Bartender 4 is not loaded
+    local buttonNames = {
+        "ActionButton", -- Main bar
+        "MultiBarBottomLeftButton",
+        "MultiBarBottomRightButton",
+        "MultiBarRightButton",
+        "MultiBarLeftButton"
+    }
+
+    for _, prefix in ipairs(buttonNames) do
+        local button = _G[prefix .. slot]
+        if button then
+            return button
+        end
+    end
+
+    return nil
+end
+
+local function GlowSpellOnActionBar(spellIDProc, shouldGlow)
+    for slot = 1, 48 do -- Check action bar slots (adjust the range if needed)
+        local actionType, id = GetActionInfo(slot)
+        
+        if actionType == "spell" then
+            -- Loop through the relative spells defined in procSpells[spellIDProc].relativeSpell
+            for _, relativeSpellID in ipairs(procSpells[spellIDProc].relativeSpell) do
+                -- If the spell ID matches and the relativeSpellID is valid
+                if id == relativeSpellID and relativeSpellID ~= nil then
+                    local button = GetActionButton(slot) -- Get the correct button
+
+                    if button then
+                        -- Create a simple glow effect (yellow/golden color) if not already created
+                        if not glowFrames[button] then
+                            local glow = button:CreateTexture(nil, "OVERLAY")
+                            glow:SetTexture(1, 0.84, 0, 0.5) -- Gold color (RGBA: R = 1, G = 0.84, B = 0, A = 0.5)
+                            glow:SetParent(button) -- Attach to button
+                            glow:SetAllPoints(button) -- Ensure it covers the whole button
+                            glow:SetBlendMode("ADD") -- Glow effect
+                            glow:SetAlpha(0) -- Start with invisible glow
+                            glowFrames[button] = glow
+
+                            -- Set up pulse animation using a simple OnUpdate loop
+                            local pulseFrame = CreateFrame("Frame", nil, button)
+                            pulseFrame.timeElapsed = 0 -- Initialize timeElapsed variable
+
+                            -- Pulse animation logic
+                            pulseFrame:SetScript("OnUpdate", function(self, elapsed)
+                                self.timeElapsed = (self.timeElapsed or 0) + elapsed
+                                local pulseDuration = 1 -- Pulse duration in seconds
+                                local alpha = math.sin(self.timeElapsed * (math.pi / pulseDuration)) * 0.5 + 0.5 -- Pulse alpha between 0 and 1
+                                glowFrames[button]:SetAlpha(alpha)
+
+                                -- Reset the timer after one complete pulse cycle
+                                if self.timeElapsed > pulseDuration then
+                                    self.timeElapsed = 0
+                                end
+                            end)
+                            pulseFrames[button] = pulseFrame
+                        end
+
+                        -- Show or hide the glow based on shouldGlow
+                        if shouldGlow then
+                            glowFrames[button]:Show()
+                            -- Start the pulse animation only if not already started
+                            if not pulseFrames[button]:GetScript("OnUpdate") then
+                                pulseFrames[button]:SetScript("OnUpdate", pulseFrames[button]:GetScript("OnUpdate"))
+                            end
+                        else
+                            glowFrames[button]:Hide()
+                            -- Stop the pulse animation
+                            pulseFrames[button]:SetScript("OnUpdate", nil)
+                        end
+                    end
+                    break -- Stop searching once the spell is found
+                end
+            end
+        end
+    end
+end
+
+
+
 local function RotateTexture(texture, rotation)
     if rotation == -90 then
         texture:SetRotation(-math.pi / 2)
@@ -166,6 +270,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
         if senderName == playerName then
             -- If the applied spell is in the list of tracked proc spells
             if procSpells[spellID] then
+                GlowSpellOnActionBar(spellID, true)
                 -- Get the icon of the proc spell
                 if procSpells[spellID].position == "MID" then
                     local frame = ShowMidFrame(procSpells[spellID].texture,procSpells[spellID].rotation)
@@ -179,6 +284,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
                     if not active_icons[spellID] then
                         active_icons[spellID] = frame
                         active_icons[spellID]:Show()
+                        
                     end
                 end
                 if procSpells[spellID].position == "BOTTOM" then
@@ -221,6 +327,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
             if procSpells[spellID] then
                 -- Get the icon of the proc spell
                 HideIcon(spellID)
+                GlowSpellOnActionBar(spellID, false)
             end
         end
     end
