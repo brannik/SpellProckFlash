@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- List of proc spell IDs to track
 local procSpells = {
     [16870] = { -- clearcasting
@@ -12,14 +13,14 @@ local procSpells = {
         position = "LEFT",
         missing = true,
         rotation = 0,
-        relativeSpell = {9999999}
+        relativeSpell = {24858}
     },
     [48517] = { -- sun proc
         texture = "Interface\\AddOns\\SPF_Druid\\Resources\\eclipse_sun.blp",
         position = "LEFT",
         missing = true,
         rotation = 0,
-        relativeSpell = {9999999}
+        relativeSpell = {24932}
     }
 }
 

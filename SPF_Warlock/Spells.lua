@@ -5,14 +5,14 @@ local procSpells = {
         position = "LEFT",
         missing = true,
         rotation = 0,
-        relativeSpell = {9999999}
+        relativeSpell = {187}
     },
     [63167] = { -- Decimation
         texture = "Interface\\AddOns\\SPF_Warlock\\Resources\\berserk.blp",
         position = "TOP",
         missing = true,
         rotation = 0,
-        relativeSpell = {9999999}
+        relativeSpell = {225}
     }
 }
 

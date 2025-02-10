@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- List of proc spell IDs to track
 local procSpells = {
     [59052] = { -- Freezing Fog
@@ -5,14 +6,14 @@ local procSpells = {
         position = "TOP",
         missing = true,
         rotation = 0,
-        relativeSpell = {9999999}
+        relativeSpell = {49143}
     },
     [51124] = { -- Killing machine
         texture = "Interface\\AddOns\\SPF_DeathKnight\\Resources\\killing_machine.blp",
         position = "LEFT",
         missing = true,
         rotation = 0,
-        relativeSpell = {9999999}
+        relativeSpell = {49039}
     }
 }
 

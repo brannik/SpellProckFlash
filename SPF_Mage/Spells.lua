@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 
 -- List of proc spell IDs to track
 local procSpells = {
@@ -6,7 +7,7 @@ local procSpells = {
         position = "LEFT",
         missing = true,
         rotation = 0,
-        relativeSpell = {9999999}
+        relativeSpell = {52}
     },
     [48108] = { -- Hot Streak
         texture = "Interface\\AddOns\\SPF_Mage\\Resources\\hot_streak.blp",
