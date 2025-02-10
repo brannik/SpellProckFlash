@@ -83,10 +83,10 @@ local function GlowSpellOnActionBar(spellIDProc, shouldGlow)
                     local button = GetActionButton(slot) -- Get the correct button
 
                     if button then
-                        -- Create a simple glow effect (yellow/golden color) if not already created
+                        -- Create a more aggressive glow effect (brighter and with more opacity)
                         if not glowFrames[button] then
                             local glow = button:CreateTexture(nil, "OVERLAY")
-                            glow:SetTexture(1, 0.84, 0, 0.5) -- Gold color (RGBA: R = 1, G = 0.84, B = 0, A = 0.5)
+                            glow:SetTexture(1, 0.84, 0, 1) -- Bright gold color (RGBA: R = 1, G = 0.84, B = 0, A = 1 for full opacity)
                             glow:SetParent(button) -- Attach to button
                             glow:SetAllPoints(button) -- Ensure it covers the whole button
                             glow:SetBlendMode("ADD") -- Glow effect
@@ -97,11 +97,11 @@ local function GlowSpellOnActionBar(spellIDProc, shouldGlow)
                             local pulseFrame = CreateFrame("Frame", nil, button)
                             pulseFrame.timeElapsed = 0 -- Initialize timeElapsed variable
 
-                            -- Pulse animation logic
+                            -- Pulse animation logic: more pronounced pulse effect
                             pulseFrame:SetScript("OnUpdate", function(self, elapsed)
                                 self.timeElapsed = (self.timeElapsed or 0) + elapsed
-                                local pulseDuration = 1 -- Pulse duration in seconds
-                                local alpha = math.sin(self.timeElapsed * (math.pi / pulseDuration)) * 0.5 + 0.5 -- Pulse alpha between 0 and 1
+                                local pulseDuration = 0.5 -- Faster pulse duration (0.5 seconds per cycle)
+                                local alpha = math.sin(self.timeElapsed * (math.pi / pulseDuration)) * 0.8 + 0.2 -- Stronger pulse, larger range (0.2 to 1.0)
                                 glowFrames[button]:SetAlpha(alpha)
 
                                 -- Reset the timer after one complete pulse cycle
@@ -115,14 +115,22 @@ local function GlowSpellOnActionBar(spellIDProc, shouldGlow)
                         -- Show or hide the glow based on shouldGlow
                         if shouldGlow then
                             glowFrames[button]:Show()
-                            -- Start the pulse animation only if not already started
-                            if not pulseFrames[button]:GetScript("OnUpdate") then
+
+                            -- If the animation is already running, reset the pulse (reset the timer and restart the animation)
+                            if pulseFrames[button]:GetScript("OnUpdate") then
+                                pulseFrames[button].timeElapsed = 0 -- Reset the timeElapsed to start the pulse from the beginning
+                            else
+                                -- Start the pulse animation if it's not running
                                 pulseFrames[button]:SetScript("OnUpdate", pulseFrames[button]:GetScript("OnUpdate"))
                             end
                         else
+                            -- Hide the glow and stop the pulse animation
                             glowFrames[button]:Hide()
-                            -- Stop the pulse animation
                             pulseFrames[button]:SetScript("OnUpdate", nil)
+                            
+                            -- Destroy the pulse animation and reset its state
+                            pulseFrames[button] = nil
+                            glowFrames[button] = nil
                         end
                     end
                     break -- Stop searching once the spell is found
