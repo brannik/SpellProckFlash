@@ -7,3 +7,5 @@
 
 SPF_Shaman_Main.lua
 Spells.lua
+cd.lua
+dots.lua

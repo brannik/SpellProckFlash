@@ -9,3 +9,4 @@ SPF_Warlock_Main.lua
 Spells.lua
 dots.lua
 temp_enchants.lua
+cd.lua

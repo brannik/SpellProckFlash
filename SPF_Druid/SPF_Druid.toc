@@ -8,3 +8,5 @@
 SPF_Druid_Main.lua
 Spells.lua
 cpoints.lua
+cd.lua
+dots.lua

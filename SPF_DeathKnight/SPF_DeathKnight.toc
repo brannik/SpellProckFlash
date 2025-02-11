@@ -7,3 +7,5 @@
 
 SPF_DeathKnight_Main.lua
 Spells.lua
+cd.lua
+dots.lua
